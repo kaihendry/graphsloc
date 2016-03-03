@@ -1,6 +1,10 @@
 #!/bin/bash
 
-test -s "$1" || exit
+if ! test -s "$1" || test "${1##*.}" != "csv"
+then
+	echo Usage: "$0" foo.csv
+	exit
+fi
 
 echo \$data \<\<EOD
 cat "$1"
