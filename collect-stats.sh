@@ -32,7 +32,7 @@ for (( i=0; i < $len; i+=$inc ));
 do
 	git checkout -q "${revs[$i]}"
 	echo "$(git show -s --format="%ct" .)" "$(findwc)" >> "$fn"
-	echo $i / $len
+	echo $i / $len $((200*$i/$len % 2 + 100*$i/$len))\%
 done
 
 # Reset
