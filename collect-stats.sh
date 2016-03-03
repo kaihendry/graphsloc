@@ -6,12 +6,30 @@ then
 	exit
 fi
 
-findwc() {
+findwc() { # fast (though can you make this faster?)
 	find -type f -not -path '*/\.*' -exec wc -l {} + | tail -n1 | awk '{ print $1 }'
 }
 
-sloc() {
+sloc() { # slow
+	# https://github.com/flosse/sloc
 	sloc -f json . | jq .summary.total
+}
+
+# Author : Teddy Skarin
+# https://github.com/fearside/ProgressBar/blob/master/progressbar.sh
+function ProgressBar {
+# Process data
+	let _progress=(${1}*100/${2}*100)/100
+	let _done=(${_progress}*4)/10
+	let _left=40-$_done
+# Build progressbar string lengths
+	_done=$(printf "%${_done}s")
+	_left=$(printf "%${_left}s")
+
+# 1.2 Build progressbar strings and print the ProgressBar line
+# 1.2.1 Output example:
+# 1.2.1.1 Progress : [########################################] 100%
+printf "\rProgress : [${_done// /#}${_left// /-}] ${_progress}%%"
 }
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -27,15 +45,17 @@ mapfile -t revs < <(git rev-list master)
 len=${#revs[@]}
 inc=1
 test "$SAMPLE" && inc=$(($len / $SAMPLE)) && echo Incrementing by $inc
+llen=$(($len - $inc))
+echo $len git commits
 
 for (( i=0; i < $len; i+=$inc ));
 do
 	git checkout -q "${revs[$i]}"
 	echo "$(git show -s --format="%ct" .)" "$(findwc)" >> "$fn"
-	echo $i / $len $((200*$i/$len % 2 + 100*$i/$len))\%
+	ProgressBar $i $llen
 done
+echo -e "\n"
 
-# Reset
-git checkout master
+git checkout master # Reset
 echo ./plot.sh "$fn" \| gnuplot \> "$fn.svg"
 cd "$DIR"
