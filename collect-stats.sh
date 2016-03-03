@@ -22,10 +22,17 @@ git checkout master
 
 test -s "$fn" && exit
 git pull
-for i in $(git rev-list master)
+
+mapfile -t revs < <(git rev-list master)
+len=${#revs[@]}
+inc=1
+test "$SAMPLE" && inc=$(($len / $SAMPLE)) && echo Incrementing by $inc
+
+for (( i=0; i < $len; i+=$inc ));
 do
-	git checkout -q "$i"
+	git checkout -q "${revs[$i]}"
 	echo "$(git show -s --format="%ct" .)" "$(findwc)" >> "$fn"
+	echo $i / $len
 done
 
 # Reset

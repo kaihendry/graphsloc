@@ -31,6 +31,8 @@ Usage example:
 	/tmp/graphsloc$ google-chrome-unstable /tmp/graphsloc/dwm-3465bed.csv.svg
 	Created new window in existing browser session.
 
+Optional: `SAMPLE=10` to only sample 10 values across the revision history.
+
 ## Using a proper SLOC counter
 
 <img src=http://s.natalian.org/2016-03-03/sloc-dwm-3465bed.svg alt="sloc of dwm">
