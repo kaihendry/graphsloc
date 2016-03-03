@@ -6,8 +6,16 @@ then
 	exit
 fi
 
-findwc() { # fast (though can you make this faster?)
-	find -type f -not -path '*/\.*' -exec wc -l {} + | tail -n1 | awk '{ print $1 }'
+gitrepo=$1
+
+checkmaster() {
+	git --git-dir=$gitrepo/.git --work-tree $gitrepo checkout master
+}
+
+trap "checkmaster" EXIT
+
+gwc() { # fast (though can you make this faster?)
+	git ls-tree --name-only -r HEAD -z | wc  -l --files0-from=- | tail -n1 | awk '{ print $1 }'
 }
 
 sloc() { # slow
@@ -33,10 +41,10 @@ printf "\rProgress : [${_done// /#}${_left// /-}] ${_progress}%%"
 }
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$1" || exit
+cd "$gitrepo" || exit
 
 fn=$DIR/$(basename "$(pwd)")-$(git describe --always).csv
-git checkout master
+checkmaster
 
 test -s "$fn" && exit
 git pull
@@ -51,11 +59,10 @@ echo $len git commits
 for (( i=0; i < $len; i+=$inc ));
 do
 	git checkout -q "${revs[$i]}"
-	echo "$(git show -s --format="%ct" .)" "$(findwc)" >> "$fn"
+	echo "$(git show -s --format="%ct" .)" "$(gwc)" >> "$fn"
 	ProgressBar $i $llen
 done
 echo -e "\n"
 
-git checkout master # Reset
 echo ./plot.sh "$fn" \| gnuplot \> "$fn.svg"
 cd "$DIR"

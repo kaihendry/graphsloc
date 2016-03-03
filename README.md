@@ -39,7 +39,7 @@ Optional: `SAMPLE=10` to only sample 10 values across the revision history.
 
 Using a proper [SLOC counter](https://github.com/flosse/sloc) is slow!
 
-## Using find & wc
+## Using wc
 
 <img src=http://s.natalian.org/2016-03-03/findwc-dwm-3465bed.svg alt="lines of dwm">
 
