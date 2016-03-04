@@ -21,5 +21,7 @@ set ylabel "Source lines of code"
 unset key
 set tic scale 0
 set grid ytics
+set format x '%Y-%m-%d'
+set bmargin at screen 0.2
 plot \$data u 1:2 w lines
 END
