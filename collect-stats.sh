@@ -15,7 +15,7 @@ checkmaster() {
 trap "checkmaster" EXIT
 
 gwc() { # fast (though can you make this faster?)
-	git ls-tree --name-only -r HEAD -z | wc  -l --files0-from=- | tail -n1 | awk '{ print $1 }'
+	git ls-tree --name-only -r HEAD -z | wc  -l --files0-from=- 2>/dev/null | tail -n1 | awk '{ print $1 }'
 }
 
 sloc() { # slow
@@ -43,11 +43,10 @@ printf "\rProgress : [${_done// /#}${_left// /-}] ${_progress}%%"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$gitrepo" || exit
 
-fn=$DIR/$(basename "$(pwd)")-$(git describe --always).csv
-checkmaster
-
-test -s "$fn" && exit
 git pull
+checkmaster
+fn=$DIR/$(basename "$(pwd)")-$(git describe --always).csv
+test -s "$fn" && exit
 
 mapfile -t revs < <(git rev-list master)
 len=${#revs[@]}
