@@ -25,14 +25,14 @@ sloc() { # slow
 
 # Author : Teddy Skarin
 # https://github.com/fearside/ProgressBar/blob/master/progressbar.sh
-function ProgressBar {
+ProgressBar() {
 # Process data
-	let _progress=(${1}*100/${2}*100)/100
-	let _done=(${_progress}*4)/10
-	let _left=40-$_done
+_progress=$(((${1}*100/${2}*100)/100))
+_done=$((_progress*4/10))
+_left=$((40-_done))
 # Build progressbar string lengths
-	_done=$(printf "%${_done}s")
-	_left=$(printf "%${_left}s")
+_done=$(printf "%${_done}s")
+_left=$(printf "%${_left}s")
 
 # 1.2 Build progressbar strings and print the ProgressBar line
 # 1.2.1 Output example:
