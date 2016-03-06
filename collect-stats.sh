@@ -19,20 +19,17 @@ _left=$(printf "%${_left}s")
 printf "\rProgress : [${_done// /#}${_left// /-}] ${_progress}%%"
 }
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$gitrepo" || exit
-
-fn=$DIR/$(basename "$(pwd)")-$(git describe --always).csv
+fn=$(basename "$gitrepo")-$(git --git-dir=$gitrepo/.git describe --always).csv
 test -s "$fn" && exit
 
-mapfile -t revs < <(git rev-list master)
+mapfile -t revs < <(git --git-dir=$gitrepo/.git rev-list master)
 len=${#revs[@]}
 echo $len git commits
 total=0
 
 for (( i=$len -1; i >= 0; i-- ));
 do
-	set -- $(git show --numstat --format="%ct" ${revs[$i]} |awk 'NR==1{print;next} NF==3 {plus+=$1; minus+=$2} END {print(plus-minus)}')
+	set -- $(git --git-dir=$gitrepo/.git show --numstat --format="%ct" ${revs[$i]} |awk 'NR==1{print;next} NF==3 {plus+=$1; minus+=$2} END {print(plus-minus)}')
 	time=$1
 	count=$2
 	#echo $time $count
@@ -41,6 +38,5 @@ do
 	echo $time $total >> $fn
 	ProgressBar $(($len-$i)) $len
 done
-cd "$DIR"
 
 echo -e "\n./plot.sh $fn | gnuplot > $fn.svg"
