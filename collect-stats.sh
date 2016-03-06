@@ -30,7 +30,7 @@ len=${#revs[@]}
 echo $len git commits
 total=0
 
-for (( i=$len; i > 0; i-- ));
+for (( i=$len -1; i >= 0; i-- ));
 do
 
 	#echo git show --numstat --format="%ct" ${revs[$i]}
@@ -44,8 +44,8 @@ do
 	total=$((total + count))
 	#echo Total $total
 	echo $time $total >> $fn
-	#ProgressBar $(($len-$i)) $len
+	ProgressBar $(($len-$i)) $len
 done
 cd "$DIR"
 
-echo -e "\n ./plot.sh $fn | gnuplot > $fn.svg"
+echo -e "\n./plot.sh $fn | gnuplot > $fn.svg"
