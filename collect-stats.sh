@@ -32,12 +32,7 @@ total=0
 
 for (( i=$len -1; i >= 0; i-- ));
 do
-
-	#echo git show --numstat --format="%ct" ${revs[$i]}
-	#foo=$(git show --numstat --format="%ct" ${revs[$i]} |awk 'NR==1{print;next} NF==3 {plus+=$1; minus+=$2} END {printf(plus-minus)}')
-	#set -- $foo
-
-	set -- $(git show --numstat --format="%ct" ${revs[$i]} |awk 'NR==1{print;next} NF==3 {plus+=$1; minus+=$2} END {printf(plus-minus)}')
+	set -- $(git show --numstat --format="%ct" ${revs[$i]} |awk 'NR==1{print;next} NF==3 {plus+=$1; minus+=$2} END {print(plus-minus)}')
 	time=$1
 	count=$2
 	#echo $time $count
