@@ -36,7 +36,7 @@ do
 	total=$((total + count))
 	#echo Total $total
 	echo $time $total >> $fn
-	ProgressBar $(($len-$i)) $len
+	ProgressBar $((len-i)) $len
 done
 
 echo -e "\n./plot.sh $fn | gnuplot > $fn.svg"
