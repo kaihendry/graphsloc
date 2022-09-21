@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if test -z "$1" || ! test -d "$1/.git"
 then
@@ -22,7 +22,7 @@ printf "\rProgress : [${_done// /#}${_left// /-}] ${_progress}%%"
 fn=$(basename "$gitrepo")-$(git --git-dir=$gitrepo/.git describe --always).csv
 test -s "$fn" && exit
 
-mapfile -t revs < <(git --git-dir=$gitrepo/.git rev-list master)
+mapfile -t revs < <(git --git-dir=$gitrepo/.git rev-list $(basename $(git --git-dir=$gitrepo/.git symbolic-ref refs/remotes/origin/HEAD)))
 len=${#revs[@]}
 echo $len git commits
 total=0
