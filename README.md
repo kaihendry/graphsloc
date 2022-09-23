@@ -1,5 +1,7 @@
 # Graph SLOC
 
+Update: Rewritten in Go https://github.com/kaihendry/lesshero
+
 Usage example:
 
 	$ ./collect-stats.sh ~/suckless/dwm
