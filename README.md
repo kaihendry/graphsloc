@@ -1,6 +1,6 @@
-# Graph SLOC
+# Graph SLOC 🚀
 
-Update: Rewritten in Go https://github.com/kaihendry/lesshero
+Update: Rewritten in Go https://github.com/kaihendry/lesshero ..though much slower due to go-git 😭
 
 Usage example:
 
